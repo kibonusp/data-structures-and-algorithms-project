@@ -1,14 +1,14 @@
 /*
  _________________________________________________ 
 /        _________________________________        \
-| == .  |                                 |       |
-|   _   |      Gabriel Alves KUabara      |    B  |
+| == .  |      Gabriel Alves KUabara      |       |
+|   _   |   Gabriel Freitas Vasconcelos   |    B  |
 |  / \  |                                 | A   O |
 | | O | |         N° USP 11275043         |  O    |
-|  \_/  |                                 |       |
-|       |    gabrielalveskuabara@usp.br   |       |
-|       |                                 | . . . |
-|  :::  |       BCC 020 - USP ICMC        | . . . |
+|  \_/  |         N° USP 11819084         |       |
+|       |                                 |       |
+|       |    gabrielalveskuabara@usp.br   | . . . |
+|  :::  |    gabriel.vasconcelos@usp.br   | . . . |
 |  :::  |_________________________________| . . . |
 |                      G A K                      |
 \_________________________________________________/
