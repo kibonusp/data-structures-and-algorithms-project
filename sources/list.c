@@ -54,15 +54,50 @@ boolean *list_insert_site(LIST *list, SITE *newsite){
 }
 
 boolean list_remove_site(LIST *list, int key){
+	if(list == NULL) return FALSE;
+	NODE *aux = list->start;
 
+	for(int i = 0; i < list->size; i++){
+		if(aux->site->key == key){
+			site_delete(aux->site);
+			return TRUE;
+		}
+		aux = aux->next;
+	}
+	return FALSE;	
 }
+
 boolean list_insert_keyword(LIST *list, int key, char *keyword){
+	if(list == NULL) return FALSE;
+	NODE *aux = site->start;
 
+	for(int i = 0; i < list->size; i++){
+		if(aux->site->key == key){
+			//function to add a keyword in the site content
+			site_add_keyword(site, keyword);
+			return TRUE;
+		}
+		aux = aux->next;
+	}
+	return FALSE;
 }
+
 boolean list_update_relevance(LIST *list, int key, int relevance){
+	if(list == NULL) return FALSE;
+	NODE *aux = site->start;
 
+	for(int i = 0; i < list->size; i++){
+		if(aux->site->key == key){
+			//function to access site relevance content
+			site_set_relevance(aux->site, relevance);
+			return TRUE;
+		}
+		aux = aux->next;
+	}
+	return FALSE;
 }
 
+//erase the list and all its content
 void list_erase(LIST **list){
 	if(*list != NULL){
 		NODE *aux;
@@ -77,7 +112,15 @@ void list_erase(LIST **list){
 }
 
 SITE *list_getsite(LIST *site, int key){
+	NODE *aux = site->start;
 
+	for(int i = 0; i < site->size; i++){
+		if(aux->site->key == key){
+			return aux->site;
+		}
+		aux = aux->next; 
+	}
+	return -1;
 }
 
 int list_size(LIST *list){

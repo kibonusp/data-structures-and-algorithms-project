@@ -12,6 +12,7 @@ struct _site{
     int num_kw;
 };
 
+//creates list and makes everything NULL or zero
 SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords) {
     SITE *site;
     SITE = (SITE *) malloc(sizeof(site));
@@ -27,6 +28,7 @@ SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords
     return site;
 }
 
+//deletes the site and all content inside it
 boolean site_delete(SITE **site) {
     if (!site)
         return FALSE;
@@ -54,6 +56,33 @@ void site_print(SITE *site) {
 int site_getkey(SITE *site) {
     if (site) return site->key;
     exit(1);
+}
+
+boolean site_set_relevance(SITE *site, int relevance){
+    if(site == NULL) return FALSE;
+    site->relevance = relevance;
+    return TRUE;
+}
+
+boolean site_add_keyword(SITE *site, char *word){
+    if(site == NULL) return FALSE;
+    site->keywords = (SITE *) realloc(site->keywords, sizeof(char *) * (site->num_kw + 1));
+    site->keywords[site->num_kw] = strPart(word, NULL, NULL);
+    site->num_kw++;
+    return TRUE;
+}
+
+boolean site_remove_keyword(SITE *site, char *word){
+    if(site == NULL) return FALSE;
+    for(int i = 0; i < site->num_kw; i++){
+        if(site->keywords[i] == words){
+            site->keywords[i] = NULL;
+            site->keywords = (SITE *) realloc(site->keywords, sizeof(char *) * (site->num_kw - 1));
+            return TRUE;
+        }
+    }
+    printf("There is any '%s' here, get out your nasty furry", word);
+    return FALSE;
 }
 
 boolean site_setkey(SITE *site, int newKey) {

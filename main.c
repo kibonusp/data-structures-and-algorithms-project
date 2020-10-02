@@ -20,11 +20,18 @@
 #include "site.h"
 
 void reading_file(){
+	char *filename = readLine(stdin);
+	FILE *fp = fopen(filename, "r");
+
 	
+
+	fclose(fp);
+	free(filename);
 }
 
 int main() {
-	
+
+
 
 	return 0;	
 }
