@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "utils.h"
 
 char* readLine(FILE* stream) {
@@ -14,11 +15,11 @@ char* readLine(FILE* stream) {
             tamanho *= 2;
         }
         //Recebendo os caracteres
-        word[i] = (char) fgetc(stdin); 
+        word[i] = (char) fgetc(stream); 
         //faço com que exclua o '\r' caso tenha
         if (word[i] == '\r') i--;
         i++;
-    } while (word[i-1] != '\n' && !feof(stdin));
+    } while (word[i-1] != '\n' && !feof(stream));
 
     //Tirando epaço adicional
     word[i - 1] = '\0'; 
