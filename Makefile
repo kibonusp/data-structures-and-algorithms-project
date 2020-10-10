@@ -1,12 +1,12 @@
 CC=gcc
 INCLUDES=./includes
-SOURCES=./sources
-BINARY=./a.out
+SOURCES=./sources/*.c
+BINARY=./main
 PROG=./main.c
 FLAGS=-Wall -Werror -g
 
 all:
-	@$(CC) $(PROG) $(SOURCES) -I$(INCLUDES) $(FLAGS)
+	@$(CC) $(PROG) -o $(BINARY) $(SOURCES) -I$(INCLUDES) $(FLAGS)
 
 valgrind:
 	@valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all $(BINARY)
@@ -18,4 +18,4 @@ clean:
 	@rm -r *.o 
 
 zip:
-	zip -r sequential_list.zip Makefile ./includes/ ./sources/ ./main.c
+	zip -r Project_1.zip Makefile ./includes/ ./sources/ ./main.c

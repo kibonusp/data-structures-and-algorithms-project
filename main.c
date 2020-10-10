@@ -18,6 +18,7 @@
 #include <string.h>
 #include "list.h"
 #include "site.h"
+#include "utils.h"
 
 void reading_file(){
 	char *filename = readLine(stdin);

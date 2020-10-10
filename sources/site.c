@@ -3,7 +3,7 @@
 #include "site.h"
 #include "utils.h"
 
-struct _site{
+struct site_{
     int key;            // primary key
     char *name;
     int relevance;
@@ -21,7 +21,7 @@ SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords
         site->name = strPart(name, NULL, NULL);
         site->relevance = relevance;
         site->URL = strPart(URL, NULL, NULL);
-        for(int i = 0; keywords[i] == TRUE; i++) site->keywords[i] = strPart(keywords[i], NULL, NULL);
+        for(int i = 0; keywords[i]; i++) site->keywords[i] = strPart(keywords[i], NULL, NULL);
         site->num_kw = 0;
     }
     return site;
@@ -53,7 +53,7 @@ void site_print(SITE *site) {
         printf("site não existe");
 }
 
-int site_getkey(SITE *site) {
+int site_get_key(SITE *site) {
     if (site) return site->key;
     exit(1);
 }
@@ -66,7 +66,7 @@ boolean site_set_relevance(SITE *site, int relevance){
 
 boolean site_add_keyword(SITE *site, char *word){
     if(site == NULL) return FALSE;
-    site->keywords = (SITE *) realloc(site->keywords, sizeof(char *) * (site->num_kw + 1));
+    site->keywords = realloc(site->keywords, sizeof(char *) * (site->num_kw + 1));
     site->keywords[site->num_kw] = strPart(word, NULL, NULL);
     site->num_kw++;
     return TRUE;
@@ -77,7 +77,7 @@ boolean site_remove_keyword(SITE *site, char *word){
     for(int i = 0; i < site->num_kw; i++){
         if(site->keywords[i] == word){
             site->keywords[i] = NULL;
-            site->keywords = (SITE *) realloc(site->keywords, sizeof(char *) * (site->num_kw - 1));
+            site->keywords = realloc(site->keywords, sizeof(char *) * (site->num_kw - 1));
             return TRUE;
         }
     }
@@ -85,7 +85,7 @@ boolean site_remove_keyword(SITE *site, char *word){
     return FALSE;
 }
 
-boolean site_setkey(SITE *site, int newKey) {
+boolean site_set_key(SITE *site, int newKey) {
     if (!site) return FALSE;
 
     site->key = newKey;
