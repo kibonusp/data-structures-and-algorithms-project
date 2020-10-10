@@ -21,6 +21,7 @@ void list_erase(LIST **list);
 SITE *list_get_site(LIST *site, int key);
 int list_size(LIST *list);
 boolean list_empty(LIST *list);
+void list_print(LIST *list);
 
 void end_program();
 

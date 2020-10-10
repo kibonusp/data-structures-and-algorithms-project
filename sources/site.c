@@ -39,7 +39,6 @@ boolean site_delete(SITE **site) {
         (*site)->keywords[i] = NULL;
     }
     free(*site); *site = NULL;
-
     return TRUE;
 }
 
@@ -50,7 +49,7 @@ void site_print(SITE *site) {
         printf("\n");
     }
     else
-        printf("site não existe");
+        printf("Sorry bro, no data here\n");
 }
 
 int site_get_key(SITE *site) {
@@ -83,11 +82,4 @@ boolean site_remove_keyword(SITE *site, char *word){
     }
     printf("There is any '%s' here, get out your nasty furry", word);
     return FALSE;
-}
-
-boolean site_set_key(SITE *site, int newKey) {
-    if (!site) return FALSE;
-
-    site->key = newKey;
-    return TRUE;
 }
