@@ -5,7 +5,7 @@
 #define FALSE 0
 #define boolean int
 
-typedef struct _site SITE;
+typedef struct site_ SITE;
 
 SITE *site_create(int key);
 boolean site_delete(SITE **site);
