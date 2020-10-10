@@ -4,7 +4,7 @@
 #include "utils.h"
 
 struct _site{
-    int key;
+    int key;            // primary key
     char *name;
     int relevance;
     char *URL;
@@ -14,9 +14,8 @@ struct _site{
 
 //creates list and makes everything NULL or zero
 SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords) {
-    SITE *site;
-    SITE = (SITE *) malloc(sizeof(site));
-    
+    SITE *site = malloc(sizeof(SITE));
+
     if (site){
         site->key = key;
         site->name = strPart(name, NULL, NULL);
@@ -33,11 +32,11 @@ boolean site_delete(SITE **site) {
     if (!site)
         return FALSE;
 
-    free(*site->name); *site->name = NULL;
-    free(*site->URL); *site->URL = NULL;
-    for(int i = 0; keywords[i] == TRUE; i++){
-        free(*site->keywords[i]);
-        *site->keywords[i] = NULL;
+    free((*site)->name); (*site)->name = NULL;
+    free((*site)->URL); (*site)->URL = NULL;
+    for(int i = 0; (*site)->keywords[i]; i++){
+        free((*site)->keywords[i]);
+        (*site)->keywords[i] = NULL;
     }
     free(*site); *site = NULL;
 
@@ -45,10 +44,11 @@ boolean site_delete(SITE **site) {
 }
 
 void site_print(SITE *site) {
-    if (site)
+    if (site){
         printf("%d,%s,%d,%s", site->key, site->name, site->relevance, site->URL);
-        for(int i = 0; keywords[i] == TRUE; i++) printf(",%s"site->keywords[i]);
+        for(int i = 0; site->keywords[i]; i++) printf(",%s", site->keywords[i]);
         printf("\n");
+    }
     else
         printf("site não existe");
 }
@@ -75,7 +75,7 @@ boolean site_add_keyword(SITE *site, char *word){
 boolean site_remove_keyword(SITE *site, char *word){
     if(site == NULL) return FALSE;
     for(int i = 0; i < site->num_kw; i++){
-        if(site->keywords[i] == words){
+        if(site->keywords[i] == word){
             site->keywords[i] = NULL;
             site->keywords = (SITE *) realloc(site->keywords, sizeof(char *) * (site->num_kw - 1));
             return TRUE;

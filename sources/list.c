@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+#include "site.h"
+#include "utils.h"
 
 struct node_{
 	SITE *site;
 	NODE *next;
-}
+};
 
 struct list_{
 	NODE *start;
 	int size;
-}
+};
 
 LIST *list_create(){
 	LIST *list = (LIST *) malloc(sizeof(LIST));
@@ -21,7 +23,7 @@ LIST *list_create(){
 	return TRUE;
 }
 
-boolean *list_insert_site(LIST *list, SITE *newsite){
+boolean list_insert_site(LIST *list, SITE *newsite){
 	//in case there is no list
 	if(list == NULL){
 		printf("最初のバカのリストを作成してください\n");
@@ -58,7 +60,7 @@ boolean list_remove_site(LIST *list, int key){
 	NODE *aux = list->start;
 
 	for(int i = 0; i < list->size; i++){
-		if(aux->site->key == key){
+		if(site_get_key(aux) == key){
 			site_delete(aux->site);
 			return TRUE;
 		}
@@ -69,12 +71,12 @@ boolean list_remove_site(LIST *list, int key){
 
 boolean list_insert_keyword(LIST *list, int key, char *keyword){
 	if(list == NULL) return FALSE;
-	NODE *aux = site->start;
+	NODE *aux = list->start;
 
 	for(int i = 0; i < list->size; i++){
-		if(aux->site->key == key){
+		if(site_get_key(aux) == key){
 			//function to add a keyword in the site content
-			site_add_keyword(site, keyword);
+			site_add_keyword(aux, keyword);
 			return TRUE;
 		}
 		aux = aux->next;
@@ -84,10 +86,10 @@ boolean list_insert_keyword(LIST *list, int key, char *keyword){
 
 boolean list_update_relevance(LIST *list, int key, int relevance){
 	if(list == NULL) return FALSE;
-	NODE *aux = site->start;
+	NODE *aux = list->start;
 
 	for(int i = 0; i < list->size; i++){
-		if(aux->site->key == key){
+		if(site_get_key(aux) == key){
 			//function to access site relevance content
 			site_set_relevance(aux->site, relevance);
 			return TRUE;
@@ -99,23 +101,23 @@ boolean list_update_relevance(LIST *list, int key, int relevance){
 
 //erase the list and all its content
 void list_erase(LIST **list){
-	if(*list != NULL){
-		NODE *aux;
-		while(*list != NULL){
-			aux = *list->start;
-			*list->start = *list->start->next;
-			site_delete(&aux->site);
-			free(aux);
+	if(*list){
+		while (!list_empty(*list)){
+			NODE* current = (*list)->start;
+			NODE* next = current->next;
+			list_remove_site(*list, site_get_key(current));
+			(*list)->start = next;
 		}
 		free(*list);
+		*list = NULL;
 	}
 }
 
-SITE *list_getsite(LIST *site, int key){
-	NODE *aux = site->start;
+SITE *list_getsite(LIST *list, int key){
+	NODE *aux = list->start;
 
-	for(int i = 0; i < site->size; i++){
-		if(aux->site->key == key){
+	for(int i = 0; i < list->size; i++){
+		if(site_get_key(aux) == key){
 			return aux->site;
 		}
 		aux = aux->next; 
@@ -129,6 +131,6 @@ int list_size(LIST *list){
 }
 
 boolean list_empty(LIST *list){
-	if(list == NULL || list->size == 0) return TRUE;
+	if(!list || !list->size) return TRUE;
 	return FALSE;
 }

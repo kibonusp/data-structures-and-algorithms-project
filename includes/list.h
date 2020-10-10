@@ -5,9 +5,6 @@
 #define FALSE 0    
 #define boolean int
 
-#include "item.h"
-#include "utils.h"
-
 typedef struct node_ NODE;
 typedef struct list_ LIST;
 

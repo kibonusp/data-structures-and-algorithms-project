@@ -7,7 +7,7 @@
 
 typedef struct _site SITE;
 
-SITE *site_create(int key);
+SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords);
 boolean site_delete(SITE **site);
 void site_print(SITE *site);
 int site_getkey(SITE *site);
