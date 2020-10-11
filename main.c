@@ -20,17 +20,6 @@
 #include "site.h"
 #include "utils.h"
 
-void reading_file(){
-	FILE *fp = fopen("googlebot.txt", "r");
-	char *aux = readLine(fp);
-
-	printf("%s\n", aux);
-	
-
-	fclose(fp);
-	free(aux);
-}
-
 void operations(LIST *list){
 
 	printf("Hello my friend, welcome to this program! Enjoy the trip!\n");
