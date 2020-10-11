@@ -150,3 +150,22 @@ void list_print(LIST *list){
 		aux = aux->next;
 	}
 }
+
+void writing_file(LIST *list){
+	file *fp = fopen("googlebot_updated", "w");
+
+	NODE *aux = malloc(sizeof(NODE));
+	aux = list->start;
+
+	char *line;
+	while(aux != NULL){
+		line = site_struct_to_string(aux->site);
+		fprintf(fp, "%s\n", line);
+		
+		aux = aux->next;
+		free(line);
+	}
+
+	line = NULL;
+	fclose(fp);
+}

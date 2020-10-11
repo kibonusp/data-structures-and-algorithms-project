@@ -14,5 +14,6 @@ int site_get_key(SITE *site);
 int site_set_relevance(SITE *site, int relevance);
 boolean site_add_keyword(SITE *site, char *word);
 boolean site_remove_keyword(SITE *site, char *word);
+char *site_struct_to_string(SITE *site);
 
 #endif 

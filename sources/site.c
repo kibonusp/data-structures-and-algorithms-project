@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "site.h"
 #include "utils.h"
 
@@ -82,4 +83,22 @@ boolean site_remove_keyword(SITE *site, char *word){
     }
     printf("There is any '%s' here, get out your nasty furry", word);
     return FALSE;
+}
+
+char *site_struct_to_string(SITE *site){
+    char *line = malloc(sizeof(char) * 0);
+
+    strcat(line, itoa(site->key) + ",");
+    strcat(line, ",");
+    strcat(line, site->name);
+    strcat(line, ",");
+    strcat(line, itoa(site->relevance));
+    strcat(line, ",");
+    strcat(line, site->URL);
+    strcat(line, ",");
+    for(int = 0; i < site->num_kw; i++){
+        strcat(line, site->keywords[i]);
+        if(i != site->num_kw - 1) strcat(line, ",");
+    }
+    return line;
 }
