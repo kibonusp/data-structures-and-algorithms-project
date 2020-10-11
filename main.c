@@ -49,8 +49,6 @@ SITE* create_site_from_googlebot(FILE* fp){
 }
 
 void operations(LIST *list){
-
-	printf("Hello my friend, welcome to this program! Enjoy the trip!\n");
 	printf("These are the possible commands for this program:\n");
 	printf("1 - Insert site\n");
 	printf("2 - Remove site\n");
@@ -59,14 +57,17 @@ void operations(LIST *list){
 	printf("5 - Exit Program\n");
 
 	while(TRUE){
-		printf("Please, type a command:\n");
+		printf("Please, type a command: ");
 		int op;
 		scanf("%d", &op);
 
 		switch(op){
 			//insert new site
 			case 1:
-				printf("Please, write all the site information as CSV:\n");
+				printf("Please, write all the site information as CSV: ");
+				//char *auau = readLine(stdin);
+				//printf("%s\n", auau);
+				getchar();
 				SITE *site = create_site_from_googlebot(stdin);
 				list_insert_site(list, site);
 				break;
@@ -81,20 +82,24 @@ void operations(LIST *list){
 
 			//new key word
 			case 3:
-				printf("Type the site code you want to add a keyword:\n");
+				printf("Type the site code you want to add a keyword: ");
 				int code3;
-				scanf("%d", &code3);
-				printf("Type the new keyword\n");
+				scanf("%d", &code3); getchar();
+
+				printf("Type the new keyword: ");
 				char *keyword = readLine(stdin);
+				
 				list_insert_keyword(list, code3, keyword);
 				free(keyword); keyword = NULL;
 				break;
 
 			//update relevance
 			case 4:
-				printf("Type the site code you want to update relevance:\n");
+				printf("Type the site code you want to update relevance: ");
 				int code4;
 				scanf("%d", &code4);
+
+				printf("Type the new relevance: ");
 				int relevance;
 				scanf("%d", &relevance);
 				list_update_relevance(list, code4, relevance);
@@ -102,30 +107,42 @@ void operations(LIST *list){
 
 			//get out:
 			case 5:
-				printf("Oh no, this is a Good bye?\nSo I'm going to give you a present!\nTake this new googlebot file updated with your commands!\nTake care of yourself! And Good Bye!!!\n");				
+				printf("\nOh no, this is a Good bye?\n"
+				"So I'm going to give you a present!\n"
+				"Take this new googlebot file updated with your commands!\n"
+				"Take care of yourself! And Good Bye!!!\n");				
 				return;
+
+			default:
+				printf("Please, can you write a valid operation number?\n");
 		}
 	}
 }
 
 int main() {
+	printf("Hello my friend, welcome to this program! Enjoy the trip!\n\n");
+
 	int nSites = 0;
 	LIST* list = list_create();
 	
+	//reading all data
 	FILE *fp = fopen("googlebot.txt", "r");
-	
+	printf("Reading from googlebot.txt...\n");
+
 	while (!feof(fp)){
 		SITE* site = create_site_from_googlebot(fp);
 		list_insert_site(list, site);
 		nSites++;
 	}
 	fclose(fp);
-	printf("Success Reading Input Data! Now, you have a list bro!!!\n");
+	printf("Success Reading Input Data! Now, you have a list bro!!!\n\n");
 
+	//list_print(list);
+	//function that does all the operations required
 	operations(list);
-	
-	writing_file(list);
-	
+
+	//writing_file(list);
+
 	list_erase(&list);
 
 	return 0;	

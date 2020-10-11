@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "list.h"
 #include "site.h"
 #include "utils.h"
@@ -41,12 +42,26 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 	elem->site = newsite;
 	NODE *prior = NULL, *actual = list->start;
 
+	//verifies if the newsite key is equal to the one of the site at list start
+	if(actual && site_get_key(actual->site) == site_get_key(newsite)){
+		site_delete(&newsite);
+		printf("Sorry, but this site already exists\n");
+		return FALSE;
+	}
+
 	//gets the position to be alocated
 	while(actual && site_get_key(actual->site) < site_get_key(newsite)){
 		prior = actual;
 		actual = actual->next;
-	}
 
+		//verifies if there are equal keys
+		if(actual && site_get_key(actual->site) == site_get_key(newsite)){
+			site_delete(&newsite);
+			printf("Sorry, but this site already exists\n");
+			return FALSE;
+		}
+	}
+	
 	//if is the first element
 	if(actual == list->start){
 		elem->next = list->start;
@@ -62,6 +77,7 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 		prior->next = elem;
 	}
 	list->size++;
+	//site_print(elem->site);
 	return TRUE;
 }
 
@@ -77,6 +93,7 @@ boolean list_remove_site(LIST *list, int key){
 		}
 		aux = aux->next;
 	}
+	printf("Sorry, but there is no site with this code\n");
 	return FALSE;	
 }
 
@@ -93,6 +110,7 @@ boolean list_insert_keyword(LIST *list, int key, char *keyword){
 		}
 		aux = aux->next;
 	}
+	printf("Sorry, but there is no site with this code\n");
 	return FALSE;
 }
 
@@ -109,22 +127,25 @@ boolean list_update_relevance(LIST *list, int key, int relevance){
 		}
 		aux = aux->next;
 	}
+	printf("Sorry, but there is no site with this code\n");
 	return FALSE;
 }
 
 //erase the list and all its content
 void list_erase(LIST **list){
-	if(*list){
-		while (!list_empty(*list)){
-			NODE* current = (*list)->start;
-			NODE* next = current->next;
-			list_remove_site(*list, site_get_key(current->site));
-			(*list)->start = next;
-		}
-		free(*list);
-		*list = NULL;
+	if(!list) return;
+
+	NODE *actual = (*list)->start, *next = NULL;
+
+	while (actual){
+		next = actual->next;
+		site_delete(&actual->site);
+		free(actual);
+		actual = next;
 	}
-	printf("Oh no, you deleted all the data!!!\n");
+	actual = NULL;
+	free(*list);
+	*list = NULL;
 }
 
 SITE *list_getsite(LIST *list, int key){
@@ -162,16 +183,19 @@ void list_print(LIST *list){
 }
 
 void writing_file(LIST *list){
-	FILE *fp = fopen("googlebot_updated", "w");
+	FILE *fp = fopen("googlebot_updated", "a");
 
 	NODE *aux = malloc(sizeof(NODE));
 	aux = list->start;
 
 	char *line;
 	while(aux != NULL){
+		printf("alo1\n");
 		line = site_struct_to_string(aux->site);
-		fprintf(fp, "%s\n", line);
-		
+		printf("alo2\n");
+		fwrite(line, sizeof(char), strlen(line), fp);
+		//fprintf(fp, "%s\n", line);
+		printf("alo3\n");
 		aux = aux->next;
 		free(line);
 	}
