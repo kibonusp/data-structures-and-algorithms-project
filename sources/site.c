@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "site.h"
 #include "utils.h"
 
@@ -39,7 +40,6 @@ boolean site_delete(SITE **site) {
         (*site)->keywords[i] = NULL;
     }
     free(*site); *site = NULL;
-
     return TRUE;
 }
 
@@ -50,7 +50,7 @@ void site_print(SITE *site) {
         printf("\n");
     }
     else
-        printf("site não existe");
+        printf("Sorry bro, no data here\n");
 }
 
 int site_get_key(SITE *site) {
@@ -85,9 +85,20 @@ boolean site_remove_keyword(SITE *site, char *word){
     return FALSE;
 }
 
-boolean site_set_key(SITE *site, int newKey) {
-    if (!site) return FALSE;
+char *site_struct_to_string(SITE *site){
+    char *line = malloc(sizeof(char) * 0);
 
-    site->key = newKey;
-    return TRUE;
+    strcat(line, itoa(site->key) + ",");
+    strcat(line, ",");
+    strcat(line, site->name);
+    strcat(line, ",");
+    strcat(line, itoa(site->relevance));
+    strcat(line, ",");
+    strcat(line, site->URL);
+    strcat(line, ",");
+    for(int = 0; i < site->num_kw; i++){
+        strcat(line, site->keywords[i]);
+        if(i != site->num_kw - 1) strcat(line, ",");
+    }
+    return line;
 }
