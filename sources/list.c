@@ -20,14 +20,12 @@ LIST *list_create(){
 
 	list->start = NULL;
 	list->size = 0;
-	printf("Now you have a list bro\n");
 	return list;
 }
 
 boolean list_insert_site(LIST *list, SITE *newsite){
 	//in case there is no list
-	if(!list)
-		return FALSE;
+	if(!list) return FALSE;
 
 	NODE *elem = malloc(sizeof(NODE));
 	//if the list is empty, put the site in the start
@@ -39,17 +37,30 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 		return TRUE;
 	}
 
-
 	//if the list already has content, it needs to be added by order
 	elem->site = newsite;
 	NODE *prior = NULL, *actual = list->start;
+
+	//gets the position to be alocated
 	while(actual && site_get_key(actual->site) < site_get_key(newsite)){
 		prior = actual;
 		actual = actual->next;
 	}
-	elem->next = actual;
-	prior->next = elem;
 
+	//if is the first element
+	if(actual == list->start){
+		elem->next = list->start;
+		list->start = elem;
+	}
+	//if is the last element
+	else if(!actual){
+		prior->next = elem;
+		elem->next = NULL;
+	}
+	else{
+		elem->next = actual;
+		prior->next = elem;
+	}
 	list->size++;
 	return TRUE;
 }
