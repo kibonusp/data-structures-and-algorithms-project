@@ -111,12 +111,15 @@ void operations(LIST *list){
 int main() {
 	int nSites = 0;
 	LIST* list = list_create();
+	printf("hello1\n");
 	FILE *fp = fopen("googlebot.txt", "r");
+	printf("hello1\n");
 	while (!feof(fp)){
 		SITE* site = create_site_from_googlebot(fp);
 		list_insert_site(list, site);
 		nSites++;
 	}
+	printf("hello1\n");
 	operations(list);
 	writing_file(list);
 	list_erase(&list);

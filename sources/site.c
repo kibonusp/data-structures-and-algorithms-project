@@ -96,14 +96,22 @@ boolean site_remove_keyword(SITE *site, char *word){
 char *site_struct_to_string(SITE *site){
     char *line = malloc(sizeof(char) * 0);
 
-    strcat(line, itoa(site->key) + ",");
+    char *aux1;
+    sprintf(aux1, "%d", site->key);
+    strcat(line, aux1);
     strcat(line, ",");
+
     strcat(line, site->name);
     strcat(line, ",");
-    strcat(line, itoa(site->relevance));
+    
+    char *aux2;
+    sprintf(aux2, "%d", site->relevance);
+    strcat(line, aux2);
     strcat(line, ",");
+
     strcat(line, site->URL);
     strcat(line, ",");
+
     for(int i = 0; i < site->num_kw; i++){
         strcat(line, site->keywords[i]);
         if(i != site->num_kw - 1) strcat(line, ",");
