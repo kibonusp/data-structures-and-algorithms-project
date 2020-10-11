@@ -20,6 +20,7 @@ LIST *list_create(){
 
 	list->start = NULL;
 	list->size = 0;
+	printf("Now you have a list bro\n");
 	return list;
 }
 
@@ -76,6 +77,7 @@ boolean list_insert_keyword(LIST *list, int key, char *keyword){
 		if(site_get_key(aux->site) == key){
 			//function to add a keyword in the site content
 			site_add_keyword(aux->site, keyword);
+			printf("New keyword added\n");
 			return TRUE;
 		}
 		aux = aux->next;
@@ -91,6 +93,7 @@ boolean list_update_relevance(LIST *list, int key, int relevance){
 		if(site_get_key(aux->site) == key){
 			//function to access site relevance content
 			site_set_relevance(aux->site, relevance);
+			printf("Revelance updated with success\n");
 			return TRUE;
 		}
 		aux = aux->next;
@@ -110,6 +113,7 @@ void list_erase(LIST **list){
 		free(*list);
 		*list = NULL;
 	}
+	printf("Oh no, you deleted all the data!!!\n");
 }
 
 SITE *list_getsite(LIST *list, int key){
@@ -132,4 +136,35 @@ int list_size(LIST *list){
 boolean list_empty(LIST *list){
 	if(!list || !list->size) return TRUE;
 	return FALSE;
+}
+
+void list_print(LIST *list){
+	if(list == NULL) return;
+	
+	NODE *aux = malloc(sizeof(NODE));
+	aux = list->start;
+
+	while(aux){
+		site_print(aux->site);
+		aux = aux->next;
+	}
+}
+
+void writing_file(LIST *list){
+	FILE *fp = fopen("googlebot_updated", "w");
+
+	NODE *aux = malloc(sizeof(NODE));
+	aux = list->start;
+
+	char *line;
+	while(aux != NULL){
+		line = site_struct_to_string(aux->site);
+		fprintf(fp, "%s\n", line);
+		
+		aux = aux->next;
+		free(line);
+	}
+
+	line = NULL;
+	fclose(fp);
 }
