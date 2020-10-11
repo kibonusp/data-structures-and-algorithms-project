@@ -16,7 +16,7 @@ struct list_{
 
 LIST *list_create(){
 	LIST *list = malloc(sizeof(LIST));
-	if(list == NULL) return FALSE;
+	if(!list) return FALSE;
 
 	list->start = NULL;
 	list->size = 0;
@@ -25,13 +25,10 @@ LIST *list_create(){
 
 boolean list_insert_site(LIST *list, SITE *newsite){
 	//in case there is no list
-	if(list == NULL){
-		printf("最初のバカのリストを作成してください\n");
+	if(!list)
 		return FALSE;
-	}
 
-	NODE *elem = (NODE *) malloc(sizeof(NODE));
-
+	NODE *elem = malloc(sizeof(NODE));
 	//if the list is empty, put the site in the start
 	if(list_empty(list)){
 		elem->site = newsite;
@@ -41,14 +38,16 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 		return TRUE;
 	}
 
+
 	//if the list already has content, it needs to be added by order
-	NODE *prior, *actual = list->start;
-	while(actual != NULL && site_get_key(actual->site) < site_get_key(newsite)){
+	elem->site = newsite;
+	NODE *prior = NULL, *actual = list->start;
+	while(actual && site_get_key(actual->site) < site_get_key(newsite)){
 		prior = actual;
 		actual = actual->next;
 	}
-	prior->next = elem;
 	elem->next = actual;
+	prior->next = elem;
 
 	list->size++;
 	return TRUE;
