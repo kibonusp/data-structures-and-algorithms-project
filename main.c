@@ -49,12 +49,6 @@ SITE* create_site_from_googlebot(FILE* fp){
 }
 
 void operations(LIST *list){
-	printf("These are the possible commands for this program:\n");
-	printf("1 - Insert site\n");
-	printf("2 - Remove site\n");
-	printf("3 - Insert new keyword\n");
-	printf("4 - Update site relevance\n");
-	printf("5 - Exit Program\n");
 
 	while(TRUE){
 		printf("Please, type a command: ");
@@ -108,15 +102,22 @@ void operations(LIST *list){
 			//get out:
 			case 5:
 				printf("\nOh no, this is a Good bye?\n"
-				"So I'm going to give you a present!\n"
-				"Take this new googlebot file updated with your commands!\n"
-				"Take care of yourself! And Good Bye!!!\n");				
+				"Take care of yourself! See you again!!!\n");				
 				return;
 
 			default:
-				printf("Please, can you write a valid operation number?\n");
+				printf("Please, can you type a valid operation number?\n");
 		}
 	}
+}
+
+void start_messages(){
+	printf("These are the possible commands for this program:\n\n");
+	printf("\t1 - Insert site\n");
+	printf("\t2 - Remove site\n");
+	printf("\t3 - Insert new keyword\n");
+	printf("\t4 - Update site relevance\n");
+	printf("\t5 - Exit Program\n\n");
 }
 
 int main() {
@@ -129,6 +130,7 @@ int main() {
 	FILE *fp = fopen("googlebot.txt", "r");
 	printf("Reading from googlebot.txt...\n");
 
+
 	while (!feof(fp)){
 		SITE* site = create_site_from_googlebot(fp);
 		list_insert_site(list, site);
@@ -137,11 +139,10 @@ int main() {
 	fclose(fp);
 	printf("Success Reading Input Data! Now, you have a list bro!!!\n\n");
 
+	start_messages(); //messages that show the commands
 	//list_print(list);
-	//function that does all the operations required
-	operations(list);
-
-	//writing_file(list);
+	
+	operations(list); //function that does all the operations required
 
 	list_erase(&list);
 

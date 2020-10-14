@@ -181,25 +181,3 @@ void list_print(LIST *list){
 		aux = aux->next;
 	}
 }
-
-void writing_file(LIST *list){
-	FILE *fp = fopen("googlebot_updated", "a");
-
-	NODE *aux = malloc(sizeof(NODE));
-	aux = list->start;
-
-	char *line;
-	while(aux != NULL){
-		printf("alo1\n");
-		line = site_struct_to_string(aux->site);
-		printf("alo2\n");
-		fwrite(line, sizeof(char), strlen(line), fp);
-		//fprintf(fp, "%s\n", line);
-		printf("alo3\n");
-		aux = aux->next;
-		free(line);
-	}
-
-	line = NULL;
-	fclose(fp);
-}
