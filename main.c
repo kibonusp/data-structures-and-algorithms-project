@@ -121,7 +121,7 @@ void start_messages(){
 }
 
 int main() {
-	printf("Hello my friend, welcome to this program! Enjoy the trip!\n\n");
+	printf("Hello my friend, welcome to our program! Enjoy the trip!\n\n");
 
 	int nSites = 0;
 	LIST* list = list_create();

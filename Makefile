@@ -28,4 +28,4 @@ clean:
 	@rm -r *.o 
 
 zip:
-	zip -r Project_1.zip Makefile ./includes/ ./sources/ ./main.c
+	zip -r Project_1.zip Makefile ./includes/ ./sources/ ./main.c ./googlebot.txt
