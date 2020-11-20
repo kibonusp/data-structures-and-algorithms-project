@@ -23,4 +23,11 @@ int list_size(LIST *list);
 boolean list_empty(LIST *list);
 void list_print(LIST *list);
 
+// sites suggestions functions
+SITE **search_sites_with_keyword(LIST *list, char *str, int *count, int *total_kw);
+char **collect_sites_keywords(SITE **mat, int nsites, int total_kw);
+SITE **sites_with_suggested_keywords(LIST *list, char **kw, int total_kw, int *n_sites);
+SITE **search_for_largest_relevance(SITE **sites, int n_sites);
+void sites_suggestions(LIST *list, char *str);
+
 #endif

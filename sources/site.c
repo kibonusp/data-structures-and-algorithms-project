@@ -63,7 +63,22 @@ void site_print(SITE *site) {
 
 int site_get_key(SITE *site) {
     if (site) return site->key;
-    exit(1);
+    return -1;
+}
+
+char *site_getname(SITE *site){
+    if(site) return site->name;
+    return NULL;
+}
+
+char *site_getURL(SITE *site){
+    if(site) return site->URL;
+    return NULL;
+}
+
+int site_get_relevance(SITE *site){
+    if(site) return site->relevance;
+    return 0;
 }
 
 boolean site_set_relevance(SITE *site, int relevance){
@@ -93,6 +108,16 @@ boolean site_remove_keyword(SITE *site, char *word){
     return FALSE;
 }
 
+char *site_getkeywords(SITE *site, int index){
+    if(site) return site->keywords[index];
+    return NULL;
+}
+
+int site_get_nkeywords(SITE *site){
+    if(site) return site->num_kw;
+    return 0;
+}
+
 char *site_struct_to_string(SITE *site){
     char *line = malloc(sizeof(char) * 0);
 
@@ -117,4 +142,13 @@ char *site_struct_to_string(SITE *site){
         if(i != site->num_kw - 1) strcat(line, ",");
     }
     return line;
+}
+
+boolean compare_string_with_keywords(SITE *site, char *str, int *total_kw){
+    for(int i = 0; i < site->num_kw; i++)
+        if(strcmp(site->keywords[i], str) == 0){
+            *total_kw = *total_kw + site->num_kw;
+            return TRUE;
+        }
+    return FALSE;
 }

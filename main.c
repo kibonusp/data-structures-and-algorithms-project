@@ -99,14 +99,26 @@ void operations(LIST *list){
 				list_update_relevance(list, code4, relevance);
 				break;
 
-			//get out:
 			case 5:
-				printf("\nOh no, this is a Good bye?\n"
+				printf("Type your keyword and we search sites for you ٩(^‿^)۶ : ");
+				break;
+
+			case 6:
+				printf("Type your keyword and just wait for some suggestions ~(‾▿‾)~ : ");
+				getchar();
+				char *str6 = readLine(stdin);
+				sites_suggestions(list, str6);
+				free(str6); str6 = NULL;
+				break;
+
+			//get out:
+			case 7:
+				printf("\nOh no, this is a Good bye? (╥﹏╥)\n"
 				"Take care of yourself! See you again!!!\n");				
 				return;
 
 			default:
-				printf("Please, can you type a valid operation number?\n");
+				printf("Please, can you type a valid operation number? ლ(ಠ益ಠლ)╯\n");
 		}
 	}
 }
@@ -117,11 +129,13 @@ void start_messages(){
 	printf("\t2 - Remove site\n");
 	printf("\t3 - Insert new keyword\n");
 	printf("\t4 - Update site relevance\n");
-	printf("\t5 - Exit Program\n\n");
+	printf("\t5 - Search for sites with keyword\n");
+	printf("\t6 - Sites sugestions\n");
+	printf("\t7 - Exit Program\n\n");
 }
 
 int main() {
-	printf("Hello my friend, welcome to our program! Enjoy the trip!\n\n");
+	printf("Hello my friend, welcome to our program! Enjoy the trip! ༼ つ ◕_◕ ༽つ \n\n");
 
 	int nSites = 0;
 	LIST* list = list_create();
