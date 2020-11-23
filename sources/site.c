@@ -104,7 +104,7 @@ boolean site_remove_keyword(SITE *site, char *word){
             return TRUE;
         }
     }
-    printf("There is any '%s' here, get out your nasty furry", word);
+    printf("There is any '%s' here", word);
     return FALSE;
 }
 

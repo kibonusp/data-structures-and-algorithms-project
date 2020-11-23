@@ -24,6 +24,7 @@ LIST *list_create(){
 	return list;
 }
 
+// ordered insertion using the key
 boolean list_insert_site(LIST *list, SITE *newsite){
 	//in case there is no list
 	if(!list) return FALSE;
@@ -42,91 +43,87 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 	elem->site = newsite;
 	NODE *prior = NULL, *actual = list->start;
 
-	//verifies if the newsite key is equal to the one of the site at list start
-	if(actual && site_get_key(actual->site) == site_get_key(newsite)){
+	//gets the position to be alocated
+	// while key is smaller than actual, keep going...
+	while(actual && site_get_key(actual->site) < site_get_key(newsite)){
+		prior = actual;
+		actual = actual->next;	
+	}
+
+	// verifies if already has a site with this key
+	if(acutal && site_get_key(actual->site) == site_get_key(newsite)){
 		site_delete(&newsite);
 		printf("Sorry, but this site already exists\n");
 		return FALSE;
 	}
-
-	//gets the position to be alocated
-	while(actual && site_get_key(actual->site) < site_get_key(newsite)){
-		prior = actual;
-		actual = actual->next;
-
-		//verifies if there are equal keys
-		if(actual && site_get_key(actual->site) == site_get_key(newsite)){
-			site_delete(&newsite);
-			printf("Sorry, but this site already exists\n");
-			return FALSE;
-		}
-	}
 	
-	//if is the first element
+	// if is the first element
 	if(actual == list->start){
 		elem->next = list->start;
 		list->start = elem;
 	}
-	//if is the last element
+	// if is the last element
 	else if(!actual){
 		prior->next = elem;
 		elem->next = NULL;
 	}
+	// inserts in the "middle" of the list
 	else{
 		elem->next = actual;
 		prior->next = elem;
 	}
 	list->size++;
-	//site_print(elem->site);
 	return TRUE;
 }
 
 boolean list_remove_site(LIST *list, int key){
 	if(list == NULL) return FALSE;
-	NODE *aux = malloc(sizeof(NODE));
-	aux = list->start;
+	NODE *actual = list->start;
 
-	for(int i = 0; i < list->size; i++){
-		if(site_get_key(aux->site) == key){
-			site_delete(&aux->site);
-			return TRUE;
-		}
-		aux = aux->next;
+	while(actual && site_get_key(actual->site) < key)
+		actual = actual->next;
+
+	if(actual && site_get_key(actual->site) == key){
+		site_delete(&actual->site);
+		return TRUE;
 	}
+
 	printf("Sorry, but there is no site with this code\n");
 	return FALSE;	
 }
 
 boolean list_insert_keyword(LIST *list, int key, char *keyword){
 	if(list == NULL) return FALSE;
-	NODE *aux = list->start;
+	NODE *actual = list->start;
 
-	for(int i = 0; i < list->size; i++){
-		if(site_get_key(aux->site) == key){
-			//function to add a keyword in the site content
-			site_add_keyword(aux->site, keyword);
-			printf("New keyword added\n");
-			return TRUE;
-		}
-		aux = aux->next;
+	while(actual && site_get_key(actual->site) < key)
+		actual = actual->next;
+
+	if(actual && site_get_key(actual->site) == key){
+		//function to add a keyword in the site content
+		site_add_keyword(actual->site, keyword);
+		printf("New keyword added\n");
+		return TRUE;
 	}
+
 	printf("Sorry, but there is no site with this code\n");
 	return FALSE;
 }
 
 boolean list_update_relevance(LIST *list, int key, int relevance){
 	if(list == NULL) return FALSE;
-	NODE *aux = list->start;
+	NODE *actual = list->start;
 
-	for(int i = 0; i < list->size; i++){
-		if(site_get_key(aux->site) == key){
-			//function to access site relevance content
-			site_set_relevance(aux->site, relevance);
-			printf("Revelance updated with success\n");
-			return TRUE;
-		}
-		aux = aux->next;
+	while(actual && site_get_key(actual->site) < key)
+		actual = actual->next;
+
+	if(actual && site_get_key(actual->site) == key){
+		//function to access site relevance content
+		site_set_relevance(actual->site, relevance);
+		printf("Revelance updated with success\n");
+		return TRUE;
 	}
+
 	printf("Sorry, but there is no site with this code\n");
 	return FALSE;
 }
@@ -137,7 +134,7 @@ void list_erase(LIST **list){
 
 	NODE *actual = (*list)->start, *next = NULL;
 
-	while (actual){
+	while(actual){
 		next = actual->next;
 		site_delete(&actual->site);
 		free(actual);
@@ -149,14 +146,14 @@ void list_erase(LIST **list){
 }
 
 SITE *list_getsite(LIST *list, int key){
-	NODE *aux = list->start;
+	NODE *actual = list->start;
 
-	for(int i = 0; i < list->size; i++){
-		if(site_get_key(aux->site) == key){
-			return aux->site;
-		}
-		aux = aux->next; 
-	}
+	while(actual && site_get_key(actual->site) < key)
+		actual = actual->next;
+
+	if(actual && site_get_key(actual->site) == key) return actual->site;
+
+	printf("Sorry, no site with this key\n");
 	return NULL;
 }
 

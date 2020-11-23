@@ -154,7 +154,7 @@ int main() {
 	printf("Success Reading Input Data! Now, you have a list bro!!!\n\n");
 
 	start_messages(); //messages that show the commands
-	//list_print(list);
+	list_print(list);
 	
 	operations(list); //function that does all the operations required
 

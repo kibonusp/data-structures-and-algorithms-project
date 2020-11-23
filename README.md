@@ -1,14 +1,10 @@
 # data-structures-and-algorithms-project
 University project regarding data structures and algorithms
 
-This project is just a simple googlebot. We use a csv text with a list of websites as in input to a linked list. The parameters are the key of the website, its name, relevance, URL, and keywords related to the site. Then, we can manipule this data through 5 commands.
+This project is just a simple googlebot. We use a csv text with a list of websites to start the linked list. Respectively, the parameters of a website are: the key of the website, its name, relevance, URL, and keywords related to the site.
 
-1 - Add a website
+### Reasons to use a linked list:
+Considering the available structures to build our project, we may choose between a static or dinamic list. So, as we have to sort the sites according with its primary key, the use of a static list would be inneficient because all list's sites must be shifted everytime an insertion ou remotion occur, what costs lots of operations.
 
-2 - Remove a website
-
-3 - Add a keyword to a site, passing its key to do the access
-
-4 - Chance relevance of a site, passing its key to do the access
-
-5 - Exit the program
+### Searching for keys:
+Everytime we search for a specific site, we use an input key to find the site. So, to make an optimazed search, we use a loop to go through the list, comparing the input key with the sites' keys. Then, as the list is sorted, when the loop arrives at a site with key larger than the input key, this means that this input doesn't exists in the list. So, the loop breaks and it's returned that there is no site with the input.
