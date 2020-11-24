@@ -13,7 +13,6 @@ struct site_{
     int num_kw;
 };
 
-//creates list and makes everything NULL or zero
 SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords, int nKeywords) {
     SITE *site = malloc(sizeof(SITE));
 
@@ -27,7 +26,7 @@ SITE *site_create(int key, char *name, int relevance, char *URL, char **keywords
         site->keywords = NULL;
         site->keywords = malloc(nKeywords*sizeof(char*));
         site->num_kw = nKeywords;
-        for(int i = 0; i < site->num_kw; i++){
+        for(int i = 0; i < nKeywords; i++){
             site->keywords[i] = malloc((strlen(keywords[i])+1)*sizeof(char));
             strcpy(site->keywords[i], keywords[i]);
         }
@@ -53,7 +52,7 @@ boolean site_delete(SITE **site) {
 
 void site_print(SITE *site) {
     if (site){
-        printf("%d,%s,%d,%s", site->key, site->name, site->relevance, site->URL);
+        printf("%d,%s,%d,%s,%d", site->key, site->name, site->relevance, site->URL,site->num_kw);
         for(int i = 0; i < site->num_kw; i++) printf(",%s", site->keywords[i]);
         printf("\n");
     }
@@ -144,11 +143,12 @@ char *site_struct_to_string(SITE *site){
     return line;
 }
 
-boolean compare_string_with_keywords(SITE *site, char *str, int *total_kw){
-    for(int i = 0; i < site->num_kw; i++)
-        if(strcmp(site->keywords[i], str) == 0){
-            *total_kw = *total_kw + site->num_kw;
+boolean compare_string_with_keywords(SITE *site, char *str){
+    // go through site's keywords verifying if some matches 'str'
+    for(int i = 0; i < site->num_kw; i++){
+        printf("%s\n", site->keywords[i]);
+        if(strcmp(site->keywords[i], str) == 0)
             return TRUE;
-        }
+    }
     return FALSE;
 }

@@ -59,8 +59,6 @@ void operations(LIST *list){
 			//insert new site
 			case 1:
 				printf("Please, write all the site information as CSV: ");
-				//char *auau = readLine(stdin);
-				//printf("%s\n", auau);
 				getchar();
 				SITE *site = create_site_from_googlebot(stdin);
 				list_insert_site(list, site);
@@ -101,6 +99,10 @@ void operations(LIST *list){
 
 			case 5:
 				printf("Type your keyword and we search sites for you ٩(^‿^)۶ : ");
+				getchar();
+				char *str5 = readLine(stdin);
+				search_and_sort_sites_with_keyword(list, str5);
+				free(str5); str5 = NULL;
 				break;
 
 			case 6:
@@ -119,6 +121,7 @@ void operations(LIST *list){
 
 			default:
 				printf("Please, can you type a valid operation number? ლ(ಠ益ಠლ)╯\n");
+				break;
 		}
 	}
 }
@@ -154,7 +157,7 @@ int main() {
 	printf("Success Reading Input Data! Now, you have a list bro!!!\n\n");
 
 	start_messages(); //messages that show the commands
-	list_print(list);
+	//list_print(list);
 	
 	operations(list); //function that does all the operations required
 

@@ -24,6 +24,17 @@ LIST *list_create(){
 	return list;
 }
 
+NODE *search_site_through_key(LIST *list, int key){
+	NODE *actual = list->start;
+
+	// loop that get the first site with key equal or larger than the input key
+	while(actual && site_get_key(actual->site) < key)
+		actual = actual->next;
+
+	// can return 3 cases: list->start, anynode, or NULL(no site with this key)
+	return actual;
+}
+
 // ordered insertion using the key
 boolean list_insert_site(LIST *list, SITE *newsite){
 	//in case there is no list
@@ -51,7 +62,7 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 	}
 
 	// verifies if already has a site with this key
-	if(acutal && site_get_key(actual->site) == site_get_key(newsite)){
+	if(actual && site_get_key(actual->site) == site_get_key(newsite)){
 		site_delete(&newsite);
 		printf("Sorry, but this site already exists\n");
 		return FALSE;
@@ -78,45 +89,47 @@ boolean list_insert_site(LIST *list, SITE *newsite){
 
 boolean list_remove_site(LIST *list, int key){
 	if(list == NULL) return FALSE;
-	NODE *actual = list->start;
 
-	while(actual && site_get_key(actual->site) < key)
-		actual = actual->next;
+	// gets the first site with key equal or larger than the input key
+	NODE *actual = search_site_through_key(list, key);
 
+	// if 'actual' key is equal as the input key, so delete this site
 	if(actual && site_get_key(actual->site) == key){
 		site_delete(&actual->site);
 		return TRUE;
 	}
 
+	// all nodes after 'actual' has key larger than the input key, so return FALSE
 	printf("Sorry, but there is no site with this code\n");
 	return FALSE;	
 }
 
 boolean list_insert_keyword(LIST *list, int key, char *keyword){
 	if(list == NULL) return FALSE;
-	NODE *actual = list->start;
 
-	while(actual && site_get_key(actual->site) < key)
-		actual = actual->next;
+	// gets the first site with key equal or larger than the input key
+	NODE *actual = search_site_through_key(list, key);
 
+	// if 'actual' key is equal as the input key, so insert keyword
 	if(actual && site_get_key(actual->site) == key){
-		//function to add a keyword in the site content
+		//function to add a keyword in the site
 		site_add_keyword(actual->site, keyword);
 		printf("New keyword added\n");
 		return TRUE;
 	}
 
+	// all nodes after 'actual' has key larger than the input key, so return FALSE
 	printf("Sorry, but there is no site with this code\n");
 	return FALSE;
 }
 
 boolean list_update_relevance(LIST *list, int key, int relevance){
 	if(list == NULL) return FALSE;
-	NODE *actual = list->start;
 
-	while(actual && site_get_key(actual->site) < key)
-		actual = actual->next;
+	// gets the first site with key equal or larger than the input key
+	NODE *actual = search_site_through_key(list, key);
 
+	// if 'actual' key is equal as the input key, so update relevance
 	if(actual && site_get_key(actual->site) == key){
 		//function to access site relevance content
 		site_set_relevance(actual->site, relevance);
@@ -124,6 +137,7 @@ boolean list_update_relevance(LIST *list, int key, int relevance){
 		return TRUE;
 	}
 
+	// all nodes after 'actual' has key larger than the input key, so return FALSE
 	printf("Sorry, but there is no site with this code\n");
 	return FALSE;
 }
@@ -145,20 +159,23 @@ void list_erase(LIST **list){
 	*list = NULL;
 }
 
+
 SITE *list_getsite(LIST *list, int key){
-	NODE *actual = list->start;
+	if(!list) return FALSE;
 
-	while(actual && site_get_key(actual->site) < key)
-		actual = actual->next;
+	// gets the first site with key equal or larger than the input key
+	NODE *actual = search_site_through_key(list, key);
 
+	// if 'actual' key is equal as the input key, so return this site
 	if(actual && site_get_key(actual->site) == key) return actual->site;
 
+	// all nodes after 'actual' has key larger than the input key, so return FALSE
 	printf("Sorry, no site with this key\n");
 	return NULL;
 }
 
 int list_size(LIST *list){
-	if(list == NULL) return FALSE;
+	if(!list) return FALSE;
 	return list->size;
 }
 
@@ -179,59 +196,96 @@ void list_print(LIST *list){
 	}
 }
 
-SITE **search_sites_with_keyword(LIST *list, char *str, int *count, int *total_kw){
-	if(list_empty(list)) return NULL;
+SITE **search_by_keyword(LIST *list, char *str, int *count){
+	// matrix to get all the sites with 'str'
+	SITE **sites = NULL;
 
-	// matrix with site that has 'str' as keyword
-	SITE **mat = malloc(sizeof(SITE *));
-
-	// search for all sites that has the string 'str'
-	NODE *aux = list->start;
-	while(aux){
-		// looks if site has the input string
-		if(compare_string_with_keywords(aux->site, str, total_kw)){
-			mat = realloc(mat, sizeof(SITE *) * (*count + 1));
-			mat[*count] = aux->site;
-			*count++;
+	NODE *actual = list->start;
+	while(actual){
+		
+		// verifies through all the sites of the list has the keyword 'str' and add to to matrix
+		if(compare_string_with_keywords(actual->site, str)){
+			sites = (SITE **) realloc(sites, sizeof(SITE *) * (*count + 1));
+			sites[(*count)++] = actual->site;
 		}
-		aux = aux->next;
+		actual = actual->next;
 	}
-	return mat;
+
+	return sites;
 }
 
-char **collect_sites_keywords(SITE **mat, int nsites, int total_kw){
-	// matrix with all keywords of the selected sites
-	char **kw = malloc(sizeof(char *) * total_kw);
+void search_and_sort_sites_with_keyword(LIST *list, char *str){
+	if(!list) return;
 
-	int i = 0;
-	for(int j = 0; j < nsites; j++){
+	// funtion to look for sites with keyword 'str'
+	int count = 0;
+	SITE **sites = search_by_keyword(list, str, &count);
+	if(!sites){
+		printf("Sorry, there are no sites with your keyword...\n");
+		return;
+	}
 
-		// number of keywords in that mat[j]
-		int aux = site_get_nkeywords(mat[j]);
+	// sort matrix 'sites'
+	quick_sort(sites, 0, count - 1);
 
-		// collect all keywords from sites in 'mat'
-		for(int k = 0; k < aux; k++)
-			kw[i++] = site_getkeywords(mat[j], k);
+	printf("\nSo, these are the sites with keyword '%s':\n", str);
+	for (int i = count - 1; i >= 0; i--)
+		printf("%s - %s\n", site_getname(sites[i]), site_getURL(sites[i]));
+
+	free(sites); sites = NULL;
+}
+
+char **search_and_collect_keyword_from_sites(LIST *list, char *str, int *total_kw){
+	if(list_empty(list)) return NULL;
+
+	// matrix with sites' keywords
+	char **kw = NULL;
+	int count = 0;
+
+	NODE *actual = list->start;
+	while(actual){
+		// looks if 'actual' site has the input string, if TRUE, we already get
+		// all the keywords from this site into our matrix
+		if(compare_string_with_keywords(actual->site, str)){
+			
+			// realloc espace for 'actual->site' keywords
+			int num_keywords = site_get_nkeywords(actual->site);
+			*total_kw = *total_kw + num_keywords;
+			kw = realloc(kw, sizeof(char *) * (*total_kw));
+			
+			// get all keywords' pointers from a site
+			for(int i = 0; i < num_keywords; i++)
+				kw[count++] = site_getkeywords(actual->site, i); 
+		}
+		actual = actual->next;
 	}
 
 	return kw;
 }
 
 SITE **sites_with_suggested_keywords(LIST *list, char **kw, int total_kw, int *n_sites){
-	SITE **sites = malloc(sizeof(SITE *) * list->size);
+	// matrix with all the sites that has at least one keyword in 'kw'
+	SITE **sites = NULL;
 
-	NODE *aux = list->start;
-	while(aux){
+	NODE *actual = list->start;
+	while(actual){
 
+		// verifies if the actual site has at least one of the keywords in 'kw'
+		// if it has at least one, then add this site to the matrix 'sites'
+		// and go to the next site, this way we optimize the search
+		printf("erro1\n");	
 		for(int i = 0; i < total_kw; i++){
-			if(compare_string_with_keywords(aux->site, kw[i], NULL)){
-				sites[*n_sites++] = aux->site;
+
+			if(compare_string_with_keywords(actual->site, kw[i])){
+				sites = realloc(sites, sizeof(SITE *) * (*n_sites + 1));
+				sites[(*n_sites)++] = actual->site;
 				break;
 			}
 		}
-		aux = aux->next;
+		printf("erro2\n");
+		actual = actual->next;
 	}
-	sites = realloc(sites, sizeof(SITE *) * (*n_sites));
+
 	return sites;
 }
 
@@ -258,13 +312,12 @@ SITE **search_for_largest_relevance(SITE **sites, int n_sites){
 
 void sites_suggestions(LIST *list, char *str){
 
-	// matrix of site with a specific keyword
-	int total_kw = 0, count = 0;
-	SITE **mat = search_sites_with_keyword(list, str, &count, &total_kw);
+	// function that collects all keywords of sites with 'str' in its keywords
+	int total_kw = 0;
+	
+	char **kw = search_and_collect_keyword_from_sites(list, str, &total_kw);
+	for(int i = 0; i < total_kw; ++i) printf("%s\n", kw[i]);
 
-	// collect all keywords from the matrix 'mat'
-	char **kw = collect_sites_keywords(mat, count, total_kw);
- 	
  	// get sites with the keywords from 'kw'
  	int n_sites = 0;
 	SITE **sites = sites_with_suggested_keywords(list, kw, total_kw, &n_sites);
@@ -276,8 +329,7 @@ void sites_suggestions(LIST *list, char *str){
 	for(int i = 0; i < 5; i++)
 		printf("%d: %s - %s\n", i+1, site_getname(sites[i]), site_getURL(sites[i]));
 
-	free(mat);
-	free(kw);
-	free(sites);
-	free(top5);
+	free(kw); kw = NULL;
+	free(sites); sites = NULL;
+	free(top5); top5 = NULL;
 }

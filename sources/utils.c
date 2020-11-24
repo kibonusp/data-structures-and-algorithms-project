@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "site.h"
+#include "list.h"
 #include "utils.h"
 
 char* readLine(FILE* stream) {
@@ -76,4 +78,39 @@ char* strAppend(char* str, char* add) {
         new[i] = add[j];
     
     return new;
+}
+
+void quick_sort(SITE **sites, int start, int end){
+    //base case
+    if(start >= end) return;
+
+    //chossing the "pivo" element
+    int pivo = start;
+    int i = start + 1;
+    int j = end;
+
+    //int rev_pivo = site_get_relevance(sites[pivo]);
+
+    while(i < j){
+        //going to right with 'i'
+        while(i < end && site_get_relevance(sites[i]) <= site_get_relevance(sites[pivo])) i++;
+        //going to left with 'j'
+        while(site_get_relevance(sites[j]) > site_get_relevance(sites[pivo])) j--;
+        //changing 'i' and 'j' positions
+        if(i < j){
+            SITE *aux = sites[i];
+            sites[i] = sites[j];
+            sites[j] = aux;
+        }
+    }
+    
+    //changing pivo and 'j' positions
+    pivo = j;
+    SITE *temp = sites[pivo];
+    sites[pivo] = sites[start];
+    sites[start] = temp;
+
+    //recursive calls
+    quick_sort(sites, start, pivo-1);
+    quick_sort(sites, pivo+1, end);
 }

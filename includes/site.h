@@ -25,6 +25,6 @@ boolean site_remove_keyword(SITE *site, char *word);
 
 char *site_struct_to_string(SITE *site);
 
-boolean compare_string_with_keywords(SITE *site, char *str, int *total_kw);
+boolean compare_string_with_keywords(SITE *site, char *str);
 
 #endif 
